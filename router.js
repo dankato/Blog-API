@@ -4,29 +4,35 @@ const bodyParser = require('body-parser');
 const app = express();
 const router = express.Router();
 const jsonParser = bodyParser.json();
-
-
-
-//.get -> /blog-posts
 const {BlogPosts} = require('./models');
+router.use(jsonParser);
 
 // create
 BlogPosts.create("Romeo", "are you a string", "Karl");
 
+//.post -> /blog-posts
+router.post('/', jsonParser, (req, res) => {
+    const requiredFields = ['title', 'content', 'author', 'publishDate'];
+    for(let i=0; i<requiredFields.length; i++) {
+        const field = requiredFields[i];
+        if(!(field in req.body)) {
+            console.error('you are missing fields');
+            return res.status(400).send(message);
+        }
+    }
+    const item = BlogPosts.create(req.body.title, req.body.content, req.body.author, req.body.publishDate);
+    res.status(201).json(item);
+});
 
-//.get
-router.get('/blog-posts', (req, res) => {
+//.get -> /blog-posts
+router.get('/', (req, res) => {
     res.json(BlogPosts.get());
 })
 
-//.post -> /blog-posts
-router.post('/blog-posts', (req, res) => {
-    
-})
-
 //.delete -> /blog-posts/:id
+
+
 //.put -> /blog-posts/:id
 
-// router -> blog-posts
 
 module.exports = router;
