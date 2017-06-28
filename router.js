@@ -30,7 +30,11 @@ router.get('/', (req, res) => {
 })
 
 //.delete -> /blog-posts/:id
-
+router.delete('/:id', (req, res) => {
+    BlogPosts.delete(req.params.id);
+    console.log(`Deleted this guy here ${req.params.id}`);
+    res.status(204).end();
+})
 
 //.put -> /blog-posts/:id
 
